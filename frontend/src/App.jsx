@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 
 const defaultDogs = [
-  { id: 1, name: 'Milo', breed: 'Golden Retriever', age: '2 years', city: 'Pune', type: 'Hire', price: '₹1,200 / day', image: '🐕', description: 'Friendly and gentle for family outings.' },
-  { id: 2, name: 'Luna', breed: 'Border Collie', age: '1 year', city: 'Bengaluru', type: 'Adopt', price: '₹18,000', image: '🐶', description: 'Very active, intelligent, and playful.' },
-  { id: 3, name: 'Bruno', breed: 'Labrador', age: '3 years', city: 'Mumbai', type: 'Sell', price: '₹25,000', image: '🐕‍🦺', description: 'Loyal and social with children and families.' },
-  { id: 4, name: 'Coco', breed: 'Beagle', age: '8 months', city: 'Delhi', type: 'Hire', price: '₹900 / day', image: '🦮', description: 'Happy, curious, and great for short stays.' }
+  { id: 1, name: 'Milo', breed: 'Golden Retriever', age: '2 years', city: 'Pune', type: 'Hire', price: '₹1,200 / day', image: '🐕', description: 'Friendly and gentle for family outings.', ownerName: 'Aarav Singh', ownerPhone: '+91 98765 43210', ownerEmail: 'aarav.singh@example.com' },
+  { id: 2, name: 'Luna', breed: 'Border Collie', age: '1 year', city: 'Bengaluru', type: 'Adopt', price: '₹18,000', image: '🐶', description: 'Very active, intelligent, and playful.', ownerName: 'Neha Reddy', ownerPhone: '+91 99887 66554', ownerEmail: 'neha.reddy@example.com' },
+  { id: 3, name: 'Bruno', breed: 'Labrador', age: '3 years', city: 'Mumbai', type: 'Sell', price: '₹25,000', image: '🐕‍🦺', description: 'Loyal and social with children and families.', ownerName: 'Karan Mehta', ownerPhone: '+91 97654 32109', ownerEmail: 'karan.mehta@example.com' },
+  { id: 4, name: 'Coco', breed: 'Beagle', age: '8 months', city: 'Delhi', type: 'Hire', price: '₹900 / day', image: '🦮', description: 'Happy, curious, and great for short stays.', ownerName: 'Priya Nair', ownerPhone: '+91 98999 11223', ownerEmail: 'priya.nair@example.com' }
 ];
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [status, setStatus] = useState('Loading dogs...');
+  const [contactDog, setContactDog] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     breed: '',
@@ -20,7 +21,10 @@ function App() {
     type: 'Adopt',
     price: '',
     description: '',
-    image: '🐶'
+    image: '🐶',
+    ownerName: '',
+    ownerPhone: '',
+    ownerEmail: ''
   });
 
   const fetchDogs = async () => {
@@ -56,6 +60,21 @@ function App() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const getWhatsAppLink = (phone, message) => {
+    const digits = String(phone || '').replace(/\D/g, '');
+    const cleanMessage = encodeURIComponent(message || 'Hi, I am interested in your dog listing.');
+    return `https://wa.me/${digits}?text=${cleanMessage}`;
+  };
+
+  const handleContact = (dog) => {
+    if (!dog.ownerPhone && !dog.ownerEmail) {
+      setStatus(`No contact details available for ${dog.name}.`);
+      return;
+    }
+
+    setContactDog(dog);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -80,7 +99,10 @@ function App() {
         type: 'Adopt',
         price: '',
         description: '',
-        image: '🐶'
+        image: '🐶',
+        ownerName: '',
+        ownerPhone: '',
+        ownerEmail: ''
       });
       setStatus(`New listing added: ${newDog.name}`);
     } catch (error) {
@@ -179,7 +201,7 @@ function App() {
                   <p className="description">{dog.description}</p>
                   <div className="card-footer">
                     <strong>{dog.price}</strong>
-                    <button className="small-btn">Contact owner</button>
+                    <button className="small-btn" onClick={() => handleContact(dog)}>Contact owner</button>
                   </div>
                 </div>
               </article>
@@ -212,6 +234,13 @@ function App() {
               </select>
               <input name="price" placeholder="Price or hire amount" value={formData.price} onChange={handleChange} />
             </div>
+            <div className="field-row">
+              <input name="ownerName" placeholder="Owner name" value={formData.ownerName} onChange={handleChange} required />
+              <input name="ownerPhone" placeholder="Owner phone" value={formData.ownerPhone} onChange={handleChange} required />
+            </div>
+            <div className="field-row single">
+              <input name="ownerEmail" placeholder="Owner email" type="email" value={formData.ownerEmail} onChange={handleChange} required />
+            </div>
             <div className="field-row single">
               <input name="image" placeholder="Emoji or icon (example: 🐶)" value={formData.image} onChange={handleChange} />
             </div>
@@ -226,6 +255,43 @@ function App() {
           </form>
         </section>
       </main>
+
+      {contactDog && (
+        <div className="contact-modal-backdrop" onClick={() => setContactDog(null)}>
+          <div className="contact-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setContactDog(null)}>×</button>
+            <p className="eyebrow">contact owner</p>
+            <h3>{contactDog.name}</h3>
+            <p><strong>Owner:</strong> {contactDog.ownerName || 'Not provided'}</p>
+            <p><strong>Phone:</strong> {contactDog.ownerPhone || 'Not provided'}</p>
+            <p><strong>Email:</strong> {contactDog.ownerEmail || 'Not provided'}</p>
+
+            <div className="contact-actions">
+              {contactDog.ownerPhone && (
+                <a className="modal-link call" href={`tel:${contactDog.ownerPhone}`}>Call</a>
+              )}
+              {contactDog.ownerEmail && (
+                <a
+                  className="modal-link email"
+                  href={`mailto:${contactDog.ownerEmail}?subject=${encodeURIComponent('Interested in ' + contactDog.name)}&body=${encodeURIComponent('Hi, I am interested in adopting / hiring / buying ' + contactDog.name + '. Please share more details.')}`}
+                >
+                  Email
+                </a>
+              )}
+              {contactDog.ownerPhone && (
+                <a
+                  className="modal-link whatsapp"
+                  href={getWhatsAppLink(contactDog.ownerPhone, `Hi ${contactDog.ownerName || 'owner'}, I am interested in ${contactDog.name}. Please share more details.`)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  WhatsApp
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
