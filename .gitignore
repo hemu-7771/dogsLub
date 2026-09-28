@@ -1,0 +1,16 @@
+.DS_Store
+node_modules/
+.env
+*.log
+css/
+images/
+about.html
+completion.html
+contactus.html
+details.html
+form.html
+hire.html
+payment.html
+service.html
+solution.html
+javascript.js
