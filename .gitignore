@@ -1,16 +1,19 @@
-.DS_Store
 node_modules/
 .env
+.env.local
+frontend/dist/
+backend/.env
+.DS_Store
 *.log
-css/
-images/
+
+# Legacy HTML files retained for reference only; clean them before final production deployment.
 about.html
 completion.html
 contactus.html
 details.html
 form.html
 hire.html
+javascript.js
 payment.html
 service.html
 solution.html
-javascript.js
