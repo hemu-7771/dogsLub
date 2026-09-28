@@ -1,65 +1,60 @@
 # DogsLub 🐾
 
-DogsLub is a friendly marketplace for **adopting, hiring, and responsibly selling dogs**. The public landing page is a React-powered experience with search, filters, dog cards, interest actions, and a working listing form.
-
-## Live website
-
-The root `index.html` runs directly on GitHub Pages (React is loaded from public CDNs), so visitors can open the repository's Pages URL and use the website without a build step.
+DogsLub is a modern dog marketplace where people can browse, hire, adopt, and sell dogs. This project has been rebuilt as a real React frontend and Express backend so it works properly as a web application.
 
 ## Features
 
-- Browse six sample dog listings with breed, age, location, availability, and price
-- Search by dog name, breed, or city
-- Filter listings by Adopt, Hire, or Sell
-- Submit a new listing from the UI; it immediately appears in the pack
-- Interest confirmation flow for prospective owners
-- Responsive, accessible layout for phones and desktop screens
-- Express API with health check, dog search, and listing creation endpoints
+- Search and filter listings
+- Browse dog cards with price, type, and city
+- Add a new dog listing from the website form
+- Remove listings from the UI
+- Responsive design for desktop and mobile
+- Express API for dogs data
 
 ## Tech stack
 
-- **Frontend:** React 18, JSX, responsive CSS
-- **Backend:** Node.js, Express, CORS
-- **Hosting:** The static frontend is GitHub Pages compatible
+- React + Vite + JavaScript
+- Express + Node.js
+- REST API with in-memory data storage
 
-## Run the Express API locally
+## Run locally
 
-Requires Node.js 18+.
-
-```bash
-npm install
-npm start
-```
-
-The API and static website run at `http://localhost:5000`.
-
-### API endpoints
-
-| Method | Endpoint | Purpose |
-| --- | --- | --- |
-| GET | `/api/health` | Check that the API is running |
-| GET | `/api/dogs?q=labrador&mode=Adopt` | Search/filter dogs |
-| POST | `/api/dogs` | Add a listing |
-
-Example request:
+### 1) Install dependencies
 
 ```bash
-curl -X POST http://localhost:5000/api/dogs \\
-  -H "Content-Type: application/json" \\
-  -d '{"name":"Nala","breed":"Indie","city":"Mumbai","mode":"Adopt"}'
+npm install --prefix backend
+npm install --prefix frontend
 ```
 
-## Publish on GitHub Pages
+### 2) Start the backend
 
-1. Open **Settings → Pages** in this repository.
-2. Choose **Deploy from a branch**, select `main`, and select `/ (root)`.
-3. Save and open the Pages URL shown by GitHub.
+```bash
+npm run dev --prefix backend
+```
 
-The static React page works on Pages. The Express API is intended for deployment on a Node host such as Render, Railway, or Fly.io; set the frontend API URL there when connecting persistent data.
+### 3) Start the frontend
 
-## Responsible use
+Open a second terminal and run:
 
-Please verify ownership, health records, living conditions, and local animal-welfare requirements before any adoption, sale, or hire. DogsLub is a connection tool and does not replace a shelter, veterinarian, or legal agreement.
+```bash
+npm run dev --prefix frontend
+```
+
+Then open:
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5000/api/health
+
+## API routes
+
+- `GET /api/health`
+- `GET /api/dogs`
+- `POST /api/dogs`
+- `DELETE /api/dogs/:id`
+
+## Important note
+
+The repository also contains older static HTML files from the previous version. Those are legacy files and are not part of the new React system. The working app is now built from the `frontend` and `backend` folders.
 
 ## License
 
